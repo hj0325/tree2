@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f0;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* p5.js 캔버스를 배경으로 고정 */
+        canvas {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px;
+            z-index: 100;
+            background: linear-gradient(to bottom, #f5f5f0 0%, rgba(245,245,240,0) 100%);
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            letter-spacing: -2px;
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.9em;
+            letter-spacing: 8px;
+            margin-top: 5px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .subtitle span {
+            display: inline-block;
+        }
+
+        .nav {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            display: flex;
+            gap: 30px;
+            font-size: 1.1em;
+        }
+
+        .nav a {
+            color: black;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            letter-spacing: 3px;
+        }
+
+        .intro-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 200px 40px 100px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .profile-img {
+            width: 300px;
+            height: 400px;
+            background: #ddd;
+            border-radius: 50% 50% 0 0;
+            overflow: hidden;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            margin-right: 100px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><rect fill="%23ccc" width="300" height="400"/><circle cx="150" cy="120" r="50" fill="%23999"/><ellipse cx="150" cy="280" rx="80" ry="120" fill="%23999"/></svg>');
+            background-size: cover;
+        }
+
+        .intro-text {
+            max-width: 400px;
+        }
+
+        .intro-text h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .play-btn {
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .collage-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 40px;
+        }
+
+        .collage-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 800px;
+        }
+
+        .collage-item {
+            position: absolute;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .collage-item:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .card.blue {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .card.pink {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        .card.black {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .card.floral {
+            background: white;
+            border: 3px solid #4a90e2;
+        }
+
+        .card-text {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .artwork {
+            width: 200px;
+            height: 250px;
+            background: #ddd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(var(--rotate, 0deg)); }
+            50% { transform: translateY(-20px) rotate(var(--rotate, 0deg)); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-text {
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 50px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            CREATIVE<br>STUDIO
+        </div>
+        <div class="subtitle">
+            <span>✱ ✱ ✱ ✱ ✱ ✱</span>
+        </div>
+    </div>
+
+    <div class="nav">
+        <a href="#about">ABOUT</a>
+        <a href="#work">WORK</a>
+        <a href="#contact">CONTACT</a>
+    </div>
+
+    <div class="intro-section" id="about">
+        <div class="intro-text">
+            <h2>
+                Welcome to my website! Do stick around.<br>
+                Scrolling is encouraged here, it makes things happen.
+            </h2>
+            <div class="play-btn">PLAY!</div>
+        </div>
+    </div>
+
+    <div class="scroll-text">↓ SCROLL DOWN ↓</div>
+
+    <div class="collage-section" id="work">
+        <div class="collage-container">
+            <div class="collage-item float" style="top: 50px; left: 100px; --rotate: -5deg;">
+                <div class="card blue">
+                    <div class="card-text">THE<br>THEME<br>FOR<br>2025</div>
+                </div>
+            </div>
+
+            <div class="collage-item float" style="top: 100px; left: 400px; --rotate: 8deg; animation-delay: 0.5s;">
+                <div class="card black">
+                    <div class="card-text" style="font-family: cursive;">
+                        Glass<br>Gloss<br>Glare<br>Gloss
+                    </div>
+                </div>
+            </div>
+
+            <div class="collage-item float" style="top: 150px; right: 200px; --rotate: -10deg; animation-delay: 1s;">
+                <div class="artwork" style="background: #4a90e2;">🎨</div>
+            </div>
+
+            <div class="collage-item float" style="top: 400px; left: 150px; --rotate: 12deg; animation-delay: 1.5s;">
+                <div class="card floral">
+                    <div class="card-text" style="color: #4a90e2; font-size: 3em;">✿ ❀ ✿</div>
+                </div>
+            </div>
+
+            <div class="collage-item float" style="top: 450px; left: 450px; --rotate: -8deg; animation-delay: 2s;">
+                <div class="card pink">
+                    <div class="card-text" style="font-family: cursive; font-size: 2.5em;">
+                        Euphoria
+                    </div>
+                </div>
+            </div>
+
+            <div class="collage-item float" style="top: 380px; right: 150px; --rotate: 15deg; animation-delay: 2.5s;">
+                <div class="card black">
+                    <div class="card-text">
+                        WHITE<br>✱<br>EDIT
+                    </div>
+                </div>
+            </div>
+
+            <div class="collage-item float" style="bottom: 100px; left: 300px; --rotate: -12deg; animation-delay: 3s;">
+                <div class="artwork" style="background: linear-gradient(45deg, #ff6b9d, #4a90e2);">
+                    ★
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive hover effects
+        document.querySelectorAll('.collage-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+
+        // Play button interaction
+        document.querySelector('.play-btn').addEventListener('click', function() {
+            this.style.animation = 'spin 0.5s ease';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 500);
+            
+            document.querySelector('.collage-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Parallax scroll effect
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('.collage-item').forEach((item, index) => {
+                const speed = (index % 3 + 1) * 0.1;
+                item.style.transform = `translateY(${scrolled * speed}px) rotate(${item.style.getPropertyValue('--rotate')})`;
+            });
+        });
+
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <script>
+        // p5.js 트리 애니메이션
+        let angle;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            colorMode(HSB);
+            angleMode(DEGREES);
+        }
+
+        function draw() {
+            background(245, 245, 240);
+
+            // Calculate the angle based on the mouse position, maximum 90 degrees
+            angle = (mouseX / width) * 90;
+            angle = min(angle, 90);
+
+            // 나무 초기 길이를 화면 높이의 25%로 설정 (적당한 크기)
+            let len = height * 0.35;
+
+            // Start the tree from the bottom of the screen
+            translate(width / 2, height);
+
+            // Draw initial branch with thickness
+            strokeWeight(8);
+            stroke(0, 255, 255);
+            line(0, 0, 0, -len);
+
+            // Move to the end of that line
+            translate(0, -len);
+
+            // Start the recursive branching
+            branch(len, 0);
+        }
+
+        function branch(h, level) {
+            // Set the hue based on the recursion level
+            stroke(level * 20, 255, 255);
+            
+            // 선 굵기를 레벨에 따라 조정
+            strokeWeight(max(1, 8 - level * 0.8));
+
+            // Each branch will be 2/3 the size of the previous one
+            h *= 0.67;
+
+            // Draw if our branch length > 3, otherwise stop the recursion
+            if (h > 3) {
+                // Draw the right branch
+                // Save the current coordinate system
+                push();
+
+                // Rotate by angle
+                rotate(angle);
+
+                // Draw the branch
+                line(0, 0, 0, -h);
+
+                // Move to the end of the branch
+                translate(0, -h);
+
+                // Call branch() recursively
+                branch(h, level + 1);
+
+                // Restore the saved coordinate system
+                pop();
+
+                // Draw the left branch
+                push();
+                rotate(-angle);
+                line(0, 0, 0, -h);
+                translate(0, -h);
+                branch(h, level + 1);
+                pop();
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
+</body>
+</html>
